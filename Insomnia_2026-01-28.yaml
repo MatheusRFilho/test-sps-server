@@ -1,0 +1,358 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: SPS Backend
+meta:
+  id: wrk_8f312518db0e4cd1afad16035fd15b86
+  created: 1769555853733
+  modified: 1769555853733
+  description: ""
+collection:
+  - name: Autenticação
+    meta:
+      id: fld_ab7f0465c68441cc977b833057985d95
+      created: 1769556192348
+      modified: 1769562627666
+      sortKey: -1769556192348
+      description: ""
+    children:
+      - url: "{{BASE_URL}}/auth/login"
+        name: Login
+        meta:
+          id: req_03aec2de504b4adabca3908a2159a08b
+          created: 1769556195115
+          modified: 1769556922681
+          isPrivate: false
+          description: ""
+          sortKey: -1769556195115
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "admin@spsgroup.com.br",
+            	"password": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |-
+            const response = await insomnia.response.json();
+            if (response.token) {
+              await insomnia.environment.set("token", response.token);
+              await insomnia.environment.set("user_id", response.user.id);
+              await insomnia.environment.set("user_email", response.user.email);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{BASE_URL}}/auth/forgot-password"
+        name: Forgot Password
+        meta:
+          id: req_2d9935d229b54fa0bd6c25532af8ccd5
+          created: 1769559544732
+          modified: 1769559780538
+          isPrivate: false
+          description: ""
+          sortKey: -1699095043666.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "matheusrodrigofilho@Outlook.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{BASE_URL}}/auth/reset-password"
+        name: Reset Password
+        meta:
+          id: req_f476f5ee4942463694ceffca4e210bf9
+          created: 1769560346172
+          modified: 1769560397751
+          isPrivate: false
+          description: ""
+          sortKey: -1663864467942.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"token": "43d93af1623ef34cb43124e9be59d3e501ddbca3e73fd928b991c9c15a0c7b2a",
+            	"password": "12345"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Users
+    meta:
+      id: fld_5fa31b52483542abb89ef7697e0a4e59
+      created: 1769556882242
+      modified: 1769556882242
+      sortKey: -1769556882242
+      description: ""
+    children:
+      - url: "{{ _.BASE_URL }}/users"
+        name: Get All
+        meta:
+          id: req_a8c31fd44b764c5187f58647b1315654
+          created: 1769556907790
+          modified: 1769557013357
+          isPrivate: false
+          description: ""
+          sortKey: -1769556907790
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/users/2"
+        name: Get By Id
+        meta:
+          id: req_0d43ef5ec0b048819d8850ae930b007a
+          created: 1769557034463
+          modified: 1769558444955
+          isPrivate: false
+          description: ""
+          sortKey: -1769556551452.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/users"
+        name: Create
+        meta:
+          id: req_04bfa5d0033d432a82b198b3710633b9
+          created: 1769557055023
+          modified: 1769558206463
+          isPrivate: false
+          description: ""
+          sortKey: -1769556373283.75
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "matheusrodrigofilho@Outlook.com",
+            	"password": "1234",
+            	"name": "Matheus"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/users/2"
+        name: Edit
+        meta:
+          id: req_060d2a6fd4be478d8e93a590c4956afd
+          created: 1769557890113
+          modified: 1769557943945
+          isPrivate: false
+          description: ""
+          sortKey: -1769556284199.375
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "matheusrodrigofilho@outlook.com",
+              "name": "Matheus 2",
+              "type": "admin",
+              "password": "12345"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/users/2"
+        name: Delete
+        meta:
+          id: req_f54aa3bff0ed41bcae0484c45822849b
+          created: 1769560435119
+          modified: 1769560449790
+          isPrivate: false
+          description: ""
+          sortKey: -1769556239657.1875
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.BASE_URL }}/users/permissions/list"
+        name: Get All Permission
+        meta:
+          id: req_af614de3fc704c088a0125c1b1c166af
+          created: 1769560494869
+          modified: 1769560501504
+          isPrivate: false
+          description: ""
+          sortKey: -1769556729621.25
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          disabled: false
+          token: ""
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_cec2836e45dd3a7dbcbd4725fdb2cf8b78b9208a
+    created: 1769555853735
+    modified: 1769562627661
+environments:
+  name: Base Environment
+  meta:
+    id: env_cec2836e45dd3a7dbcbd4725fdb2cf8b78b9208a
+    created: 1769555853734
+    modified: 1769562627665
+    isPrivate: false
+  data:
+    BASE_URL: http://localhost:3000
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac3BzZ3JvdXAuY29tLmJyIiwidHlwZSI6ImFkbWluIiwibGFuZ3VhZ2UiOiJlbiIsImlhdCI6MTc2OTU2MjYyNywiZXhwIjoxNzY5NjQ5MDI3fQ.p2w000PuTs79iF8OylW9hIXkcE_wJXFUF7fALhA_gtg
+    user_id: 1
+    user_email: admin@spsgroup.com.br
