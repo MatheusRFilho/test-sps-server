@@ -1,0 +1,79 @@
+{
+  "errors": {
+    "invalid_credentials": "Credenciales inválidas",
+    "email_already_registered": "Correo electrónico ya registrado",
+    "user_not_found": "Usuario no encontrado",
+    "cannot_delete_admin": "No es posible eliminar el usuario administrador",
+    "access_denied": "Acceso denegado",
+    "not_authenticated": "No autenticado",
+    "token_not_provided": "Token no proporcionado. Inicie sesión para acceder a esta ruta.",
+    "invalid_token_format": "Formato de token inválido. Use: Bearer <token>",
+    "invalid_or_expired_token": "Token inválido o expirado. Inicie sesión nuevamente.",
+    "invalid_data": "Datos inválidos",
+    "internal_server_error": "Error interno del servidor",
+    "database_error": "Error en la base de datos",
+    "route_not_found": "Ruta no encontrada",
+    "email_send_failed": "Error al enviar correo electrónico",
+    "invalid_json": "JSON inválido. Verifique el formato del cuerpo de la solicitud."
+  },
+  "validation": {
+    "email_required": "El correo electrónico es obligatorio",
+    "email_invalid": "Correo electrónico inválido",
+    "password_required": "La contraseña es obligatoria",
+    "password_min_length": "La contraseña debe tener al menos 4 caracteres",
+    "name_required": "El nombre es obligatorio",
+    "name_min_length": "El nombre debe tener al menos 2 caracteres",
+    "name_max_length": "El nombre debe tener como máximo 100 caracteres",
+    "type_invalid": "El tipo debe ser: admin, manager o user",
+    "at_least_one_field": "Se debe proporcionar al menos un campo para la actualización",
+    "id_required": "ID es obligatorio",
+    "id_must_be_number": "ID debe ser un número",
+    "id_must_be_integer": "ID debe ser un número entero",
+    "id_must_be_positive": "ID debe ser un número positivo",
+    "token_required": "El token es obligatorio"
+  },
+  "success": {
+    "user_created": "Usuario creado con éxito",
+    "user_updated": "Usuario actualizado con éxito",
+    "user_deleted": "Usuario eliminado con éxito",
+    "login_success": "Inicio de sesión exitoso"
+  },
+  "guards": {
+    "requires_permission": "Esta ruta requiere permiso de: {types}",
+    "requires_authentication": "Esta ruta requiere autenticación"
+  },
+  "permissions": {
+    "insufficient_permissions": "No tiene permiso para realizar esta acción. Requerido: {permission}"
+  },
+  "auth": {
+    "password_reset": {
+      "email_sent": "Si el correo electrónico proporcionado existe en nuestro sistema, recibirá un enlace para restablecer su contraseña.",
+      "invalid_token": "Token inválido o expirado. Solicite un nuevo enlace de recuperación.",
+      "success": "Contraseña restablecida con éxito. Ahora puede iniciar sesión con su nueva contraseña."
+    }
+  },
+  "email": {
+    "welcome": {
+      "subject": "Bienvenido a SPS Group",
+      "title": "¡Bienvenido!",
+      "greeting": "Hola {name},",
+      "message": "Su cuenta ha sido creada exitosamente en nuestro sistema.",
+      "email": "Correo electrónico",
+      "type": "Tipo de Usuario",
+      "footer": "Ahora puede acceder al sistema usando sus credenciales.",
+      "signature": "Saludos cordiales,\nEquipo SPS Group"
+    },
+    "password_reset": {
+      "subject": "Restablecimiento de Contraseña - SPS Group",
+      "title": "Restablecimiento de Contraseña",
+      "greeting": "Hola {name},",
+      "message": "Solicitó un restablecimiento de contraseña. Haga clic en el botón a continuación para crear una nueva contraseña:",
+      "button": "Restablecer Contraseña",
+      "link": "Enlace para restablecer contraseña",
+      "alternative": "O copie y pegue el siguiente token en el formulario de restablecimiento:",
+      "expires": "Este enlace expira en 1 hora.",
+      "warning": "Si no solicitó este restablecimiento, ignore este correo electrónico.",
+      "signature": "Saludos cordiales,\nEquipo SPS Group"
+    }
+  }
+}

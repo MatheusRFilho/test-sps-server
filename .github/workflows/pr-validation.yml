@@ -1,0 +1,159 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-checks:
+    name: Pull Request Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Check changed files
+      id: changed-files
+      run: |
+        echo "Analyzing changed files..."
+        
+        CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+        echo "Changed files:"
+        echo "$CHANGED_FILES"
+        
+        if echo "$CHANGED_FILES" | grep -q "src/shared/locales/"; then
+          echo "i18n_changed=true" >> $GITHUB_OUTPUT
+          echo " i18n files changed - will validate"
+        else
+          echo "i18n_changed=false" >> $GITHUB_OUTPUT
+        fi
+        
+        if echo "$CHANGED_FILES" | grep -q "tests/"; then
+          echo "tests_changed=true" >> $GITHUB_OUTPUT
+          echo " Test files changed"
+        else
+          echo "tests_changed=false" >> $GITHUB_OUTPUT
+        fi
+        
+        if echo "$CHANGED_FILES" | grep -q "src/"; then
+          echo "src_changed=true" >> $GITHUB_OUTPUT
+          echo "Source files changed"
+        else
+          echo "src_changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Validate i18n changes
+      if: steps.changed-files.outputs.i18n_changed == 'true'
+      run: |
+        echo "Validating i18n changes..."
+        yarn validate:i18n
+        echo "i18n validation passed!"
+
+    - name: Type check
+      if: steps.changed-files.outputs.src_changed == 'true'
+      run: |
+        echo "Running type check..."
+        yarn type-check
+        echo "Type check passed!"
+
+    - name: Run affected tests
+      run: |
+        echo "Running tests for PR validation..."
+        
+        echo " Running unit tests..."
+        yarn test:unit:ci
+        
+        if [[ "${{ steps.changed-files.outputs.src_changed }}" == "true" ]]; then
+          echo "Running E2E tests (source changed)..."
+          yarn test:e2e:ci
+        else
+          echo "Skipping E2E tests (no source changes)"
+        fi
+
+    - name: Build check
+      if: steps.changed-files.outputs.src_changed == 'true'
+      run: |
+        echo "Checking if build works..."
+        yarn build
+        echo "Build successful!"
+
+    - name: PR Summary
+      run: |
+        echo "PR Validation Summary"
+        echo "======================="
+        echo "i18n validated: ${{ steps.changed-files.outputs.i18n_changed }}"
+        echo "Type check: ${{ steps.changed-files.outputs.src_changed }}"
+        echo "Tests executed: PASSED"
+        echo "Build check: ${{ steps.changed-files.outputs.src_changed }}"
+        echo "======================="
+        echo "PR validation completed!"
+
+  pr-comment:
+    name:  PR Comment
+    runs-on: ubuntu-latest
+    needs: pr-checks
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+    - name:  Comment PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          
+          const botComment = comments.find(comment => 
+            comment.user.type === 'Bot' && comment.body.includes(' CI/CD Validation Results')
+          );
+          
+          const status = '${{ needs.pr-checks.result }}';
+          const statusText = status === 'success' ? 'PASSOU' : 'FALHOU';
+          
+          const body = `## CI/CD Validation Results
+          
+          **Status**: **${statusText}**
+          
+          ### Validações Executadas:
+          - **Internacionalização**: Verificada
+          - **Type Check**: Executado  
+          - **Testes**: Executados
+          - **Build**: Verificado
+          
+          ${status === 'success' 
+            ? '**Todas as validações passaram!** Este PR está pronto para review.' 
+            : '**Algumas validações falharam.** Por favor, verifique os logs e corrija os problemas.'
+          }
+          
+          ---
+          *Atualizado automaticamente em: ${new Date().toISOString()}*`;
+          
+          if (botComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: body
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+          }

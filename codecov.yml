@@ -1,0 +1,26 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 2%
+    patch:
+      default:
+        target: 70%
+        threshold: 2%
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "src/scripts/**"
+  - "src/shared/database/migrations/**"
+  - "src/shared/config/**"
+  - "tests/**"
+  - "dist/**"
+  - "coverage/**"
+  - "*.d.ts"
+  - "jest.config.js"
+  - "scripts/**"

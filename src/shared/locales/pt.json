@@ -1,0 +1,79 @@
+{
+  "errors": {
+    "invalid_credentials": "Credenciais inválidas",
+    "email_already_registered": "Email já cadastrado",
+    "user_not_found": "Usuário não encontrado",
+    "cannot_delete_admin": "Não é possível deletar o usuário administrador",
+    "access_denied": "Acesso negado",
+    "not_authenticated": "Não autenticado",
+    "token_not_provided": "Token não fornecido. Faça login para acessar esta rota.",
+    "invalid_token_format": "Formato de token inválido. Use: Bearer <token>",
+    "invalid_or_expired_token": "Token inválido ou expirado. Faça login novamente.",
+    "invalid_data": "Dados inválidos",
+    "internal_server_error": "Erro interno do servidor",
+    "database_error": "Erro no banco de dados",
+    "route_not_found": "Rota não encontrada",
+    "email_send_failed": "Falha ao enviar email",
+    "invalid_json": "JSON inválido. Verifique o formato do corpo da requisição."
+  },
+  "validation": {
+    "email_required": "Email é obrigatório",
+    "email_invalid": "Email inválido",
+    "password_required": "Senha é obrigatória",
+    "password_min_length": "Senha deve ter no mínimo 4 caracteres",
+    "name_required": "Nome é obrigatório",
+    "name_min_length": "Nome deve ter no mínimo 2 caracteres",
+    "name_max_length": "Nome deve ter no máximo 100 caracteres",
+    "type_invalid": "Tipo deve ser: admin, manager ou user",
+    "at_least_one_field": "Pelo menos um campo deve ser fornecido para atualização",
+    "id_required": "ID é obrigatório",
+    "id_must_be_number": "ID deve ser um número",
+    "id_must_be_integer": "ID deve ser um número inteiro",
+    "id_must_be_positive": "ID deve ser um número positivo",
+    "token_required": "Token é obrigatório"
+  },
+  "success": {
+    "user_created": "Usuário criado com sucesso",
+    "user_updated": "Usuário atualizado com sucesso",
+    "user_deleted": "Usuário deletado com sucesso",
+    "login_success": "Login realizado com sucesso"
+  },
+  "guards": {
+    "requires_permission": "Esta rota requer permissão de: {types}",
+    "requires_authentication": "Esta rota requer autenticação"
+  },
+  "permissions": {
+    "insufficient_permissions": "Você não tem permissão para realizar esta ação. Necessário: {permission}"
+  },
+  "auth": {
+    "password_reset": {
+      "email_sent": "Se o email fornecido existir em nosso sistema, você receberá um link para redefinir sua senha.",
+      "invalid_token": "Token inválido ou expirado. Solicite um novo link de recuperação.",
+      "success": "Senha redefinida com sucesso. Você já pode fazer login com sua nova senha."
+    }
+  },
+  "email": {
+    "welcome": {
+      "subject": "Bem-vindo ao SPS Group",
+      "title": "Bem-vindo!",
+      "greeting": "Olá {name},",
+      "message": "Sua conta foi criada com sucesso em nosso sistema.",
+      "email": "Email",
+      "type": "Tipo de Usuário",
+      "footer": "Agora você pode acessar o sistema usando suas credenciais.",
+      "signature": "Atenciosamente,\nEquipe SPS Group"
+    },
+    "password_reset": {
+      "subject": "Redefinição de Senha - SPS Group",
+      "title": "Redefinição de Senha",
+      "greeting": "Olá {name},",
+      "message": "Você solicitou a redefinição de senha. Clique no botão abaixo para criar uma nova senha:",
+      "button": "Redefinir Senha",
+      "link": "Link para redefinir senha",
+      "alternative": "Ou copie e cole o seguinte token no formulário de redefinição:",
+      "expires": "Este link expira em 1 hora.",
+      "warning": "Se você não solicitou esta redefinição, ignore este email.",
+      "signature": "Atenciosamente,\nEquipe SPS Group"
+    }
+  }
+}

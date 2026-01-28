@@ -1,1 +1,18 @@
 /node_modules
+*.db
+*.db-shm
+*.db-wal
+.env
+/dist
+*.log
+.DS_Store
+
+# Test database
+test.db
+test.db-journal
+test.db-wal
+test.db-shm
+
+# Coverage
+coverage/
+*.lcov

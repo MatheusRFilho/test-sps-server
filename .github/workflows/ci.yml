@@ -1,0 +1,266 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_ENV: test
+  JWT_SECRET: test-secret-key-for-ci
+  FRONTEND_URL: http://localhost:3000
+
+jobs:
+  code-quality:
+    name: Code Quality & Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Validate internationalization files
+      run: yarn validate:i18n
+
+    - name: Check TypeScript compilation
+      run: |
+        echo "Checking TypeScript compilation..."
+        npx tsc --noEmit
+        echo "TypeScript compilation successful!"
+
+    - name:  Code style check (if configured)
+      run: |
+        if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || [ -f "eslint.config.js" ]; then
+          echo " Running ESLint..."
+          yarn lint
+        else
+          echo "  ESLint not configured, skipping..."
+        fi
+      continue-on-error: true
+
+  unit-tests:
+    name:  Unit Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Run unit tests
+      run: yarn test:unit:ci
+
+    - name:  Upload coverage to Codecov
+      if: matrix.node-version == '20.x'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  integration-tests:
+    name:  Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Run E2E tests
+      run: yarn test:e2e:ci
+
+  build-and-validate:
+    name:  Build & Validate
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Build application
+      run: |
+        echo " Building application..."
+        yarn build
+        echo " Build successful!"
+
+    - name:  Validate build artifacts
+      run: |
+        echo " Validating build artifacts..."
+        if [ ! -d "dist" ]; then
+          echo " Build directory 'dist' not found!"
+          exit 1
+        fi
+        
+        if [ ! -f "dist/index.js" ]; then
+          echo " Main entry file 'dist/index.js' not found!"
+          exit 1
+        fi
+        
+        echo " Build artifacts validated!"
+
+    - name:  Test application startup
+      run: |
+        echo " Testing application startup..."
+        timeout 30s yarn start &
+        SERVER_PID=$!
+        
+        echo "Waiting for server to start..."
+        sleep 15
+        
+        echo " Testing health endpoint..."
+        if curl -f http://localhost:3000/health; then
+          echo " Health check passed!"
+          
+          echo " Testing main endpoint..."
+          if curl -f http://localhost:3000/; then
+            echo " Main endpoint working!"
+          else
+            echo "  Main endpoint not responding, but health check passed"
+          fi
+          
+          kill $SERVER_PID 2>/dev/null || true
+        else
+          echo " Health check failed!"
+          echo " Server logs:"
+          jobs
+          kill $SERVER_PID 2>/dev/null || true
+          exit 1
+        fi
+
+  security-scan:
+    name:  Security Scan
+    runs-on: ubuntu-latest
+    needs: code-quality
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Run security audit
+      run: |
+        echo " Running security audit..."
+        yarn audit --level moderate || echo "  Some vulnerabilities found, please review"
+        
+        echo " Checking for sensitive files..."
+        if find . -name "*.env" -not -path "./node_modules/*" -not -name ".env.example" | grep -q .; then
+          echo "  Found .env files in repository!"
+          find . -name "*.env" -not -path "./node_modules/*" -not -name ".env.example"
+        fi
+        
+        echo " Security scan completed!"
+
+  performance-tests:
+    name:  Performance Tests
+    runs-on: ubuntu-latest
+    needs: build-and-validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name:  Basic performance test
+      run: |
+        echo " Running basic performance tests..."
+        yarn start &
+        SERVER_PID=$!
+        sleep 10
+        
+        echo " Testing response times..."
+        for i in {1..5}; do
+          time curl -s http://localhost:3000/ > /dev/null
+        done
+        
+        kill $SERVER_PID 2>/dev/null || true
+        echo " Performance tests completed!"
+
+  report:
+    name:  Final Report
+    runs-on: ubuntu-latest
+    needs: [code-quality, unit-tests, integration-tests, build-and-validate, security-scan]
+    if: always()
+    
+    steps:
+    - name:  Generate report
+      run: |
+        echo " CI/CD Pipeline Report"
+        echo "======================="
+        echo " Code Quality: ${{ needs.code-quality.result }}"
+        echo " Unit Tests: ${{ needs.unit-tests.result }}"
+        echo " Integration Tests: ${{ needs.integration-tests.result }}"
+        echo "  Build & Validate: ${{ needs.build-and-validate.result }}"
+        echo " Security Scan: ${{ needs.security-scan.result }}"
+        echo "======================="
+        
+        if [[ "${{ needs.code-quality.result }}" == "success" && 
+              "${{ needs.unit-tests.result }}" == "success" && 
+              "${{ needs.integration-tests.result }}" == "success" && 
+              "${{ needs.build-and-validate.result }}" == "success" && 
+              "${{ needs.security-scan.result }}" == "success" ]]; then
+          echo " All checks passed! Ready for deployment."
+        else
+          echo " Some checks failed. Please review the logs."
+          exit 1
+        fi

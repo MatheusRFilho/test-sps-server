@@ -1,0 +1,79 @@
+{
+  "errors": {
+    "invalid_credentials": "Invalid credentials",
+    "email_already_registered": "Email already registered",
+    "user_not_found": "User not found",
+    "cannot_delete_admin": "Cannot delete administrator user",
+    "access_denied": "Access denied",
+    "not_authenticated": "Not authenticated",
+    "token_not_provided": "Token not provided. Please login to access this route.",
+    "invalid_token_format": "Invalid token format. Use: Bearer <token>",
+    "invalid_or_expired_token": "Invalid or expired token. Please login again.",
+    "invalid_data": "Invalid data",
+    "internal_server_error": "Internal server error",
+    "database_error": "Database error",
+    "route_not_found": "Route not found",
+    "email_send_failed": "Failed to send email",
+    "invalid_json": "Invalid JSON. Please check the request body format."
+  },
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Invalid email",
+    "password_required": "Password is required",
+    "password_min_length": "Password must have at least 4 characters",
+    "name_required": "Name is required",
+    "name_min_length": "Name must have at least 2 characters",
+    "name_max_length": "Name must have at most 100 characters",
+    "type_invalid": "Type must be: admin, manager or user",
+    "at_least_one_field": "At least one field must be provided for update",
+    "id_required": "ID is required",
+    "id_must_be_number": "ID must be a number",
+    "id_must_be_integer": "ID must be an integer",
+    "id_must_be_positive": "ID must be a positive number",
+    "token_required": "Token is required"
+  },
+  "success": {
+    "user_created": "User created successfully",
+    "user_updated": "User updated successfully",
+    "user_deleted": "User deleted successfully",
+    "login_success": "Login successful"
+  },
+  "guards": {
+    "requires_permission": "This route requires permission: {types}",
+    "requires_authentication": "This route requires authentication"
+  },
+  "permissions": {
+    "insufficient_permissions": "You don't have permission to perform this action. Required: {permission}"
+  },
+  "auth": {
+    "password_reset": {
+      "email_sent": "If the provided email exists in our system, you will receive a link to reset your password.",
+      "invalid_token": "Invalid or expired token. Please request a new recovery link.",
+      "success": "Password reset successfully. You can now login with your new password."
+    }
+  },
+  "email": {
+    "welcome": {
+      "subject": "Welcome to SPS Group",
+      "title": "Welcome!",
+      "greeting": "Hello {name},",
+      "message": "Your account has been successfully created in our system.",
+      "email": "Email",
+      "type": "User Type",
+      "footer": "You can now access the system using your credentials.",
+      "signature": "Best regards,\nSPS Group Team"
+    },
+    "password_reset": {
+      "subject": "Password Reset - SPS Group",
+      "title": "Password Reset",
+      "greeting": "Hello {name},",
+      "message": "You requested a password reset. Click the button below to create a new password:",
+      "button": "Reset Password",
+      "link": "Password reset link",
+      "alternative": "Or copy and paste the following token into the reset form:",
+      "expires": "This link expires in 1 hour.",
+      "warning": "If you did not request this reset, please ignore this email.",
+      "signature": "Best regards,\nSPS Group Team"
+    }
+  }
+}

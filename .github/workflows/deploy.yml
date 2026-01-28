@@ -1,0 +1,95 @@
+name:  Deploy
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+
+env:
+  NODE_ENV: production
+
+jobs:
+  deploy:
+    name:  Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name:  Checkout code
+      uses: actions/checkout@v4
+
+    - name:  Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'yarn'
+
+    - name:  Install dependencies
+      run: yarn install --frozen-lockfile --production=false
+
+    - name:  Validate internationalization
+      run: yarn validate:i18n
+
+    - name:  Type check
+      run: yarn type-check
+
+    - name:  Run all tests
+      run: yarn test:ci
+
+    - name:  Build application
+      run: yarn build
+
+    - name:  Prepare deployment package
+      run: |
+        echo " Creating deployment package..."
+        
+        mkdir -p deploy
+        
+        cp -r dist/ deploy/
+        cp package.json deploy/
+        cp yarn.lock deploy/
+        cp -r src/shared/locales/ deploy/locales/
+        cp -r src/shared/templates/ deploy/templates/
+        
+        echo "{\"version\": \"$(date +%Y%m%d-%H%M%S)\", \"commit\": \"$GITHUB_SHA\"}" > deploy/version.json
+        
+        echo " Deployment package ready!"
+
+    - name:  Validate deployment package
+      run: |
+        echo " Validating deployment package..."
+        
+        cd deploy
+        
+        if [ ! -f "package.json" ]; then
+          echo " package.json missing!"
+          exit 1
+        fi
+        
+        if [ ! -d "dist" ]; then
+          echo " dist directory missing!"
+          exit 1
+        fi
+        
+        if [ ! -f "dist/index.js" ]; then
+          echo " Main entry file missing!"
+          exit 1
+        fi
+        
+        if [ ! -d "locales" ]; then
+          echo " Locales directory missing!"
+          exit 1
+        fi
+        
+        echo " Deployment package validated!"
+
+    - name:  Deployment summary
+      run: |
+        echo " Deployment Summary"
+        echo "===================="
+        echo " Version: $(cat deploy/version.json | grep -o '"version":"[^"]*' | cut -d'"' -f4)"
+        echo " Commit: $GITHUB_SHA"
+        echo " Branch: $GITHUB_REF_NAME"
+        echo " Author: $GITHUB_ACTOR"
+        echo "===================="
+        echo " Ready for production deployment!"
