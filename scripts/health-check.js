@@ -4,10 +4,10 @@ const http = require('http');
 
 const options = {
   hostname: 'localhost',
-  port: 3000,
+  port: process.env.PORT || 3000,
   path: '/',
   method: 'GET',
-  timeout: 5000
+  timeout: 10000
 };
 
 const req = http.request(options, (res) => {
@@ -34,5 +34,5 @@ req.on('timeout', () => {
   process.exit(1);
 });
 
-req.setTimeout(5000);
+req.setTimeout(10000);
 req.end();

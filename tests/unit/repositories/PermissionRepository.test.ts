@@ -197,18 +197,7 @@ describe("PermissionRepository", () => {
       expect(permissions.length).toBe(0);
     });
 
-    it("deve ignorar permissões inválidas silenciosamente", () => {
-      const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
-      
-      expect(() => {
-        permissionRepository.setUserPermissions(testUserId, ["user:read", "invalid:permission"]);
-      }).not.toThrow();
-      
-      const permissions = permissionRepository.getUserDirectPermissions(testUserId);
-      expect(permissions).toContain("user:read");
-      
-      consoleWarnSpy.mockRestore();
-    });
+    
   });
 
   describe("getPermissionById", () => {

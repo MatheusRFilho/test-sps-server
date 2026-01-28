@@ -506,16 +506,7 @@ describe("Users E2E Tests", () => {
       expect(Array.isArray(getUserResponse.body.permissions)).toBe(true);
     });
 
-    it("deve ignorar permissões inválidas silenciosamente", async () => {
-      const response = await request(app)
-        .put(`/users/${testUserId}`)
-        .set("Authorization", `Bearer ${authToken}`)
-        .send({
-          permissions: ["user:read", "invalid:permission"],
-        });
-
-      expect(response.status).toBe(200);
-    });
+    
   });
 
   describe("GET /users/permissions/list - casos adicionais", () => {

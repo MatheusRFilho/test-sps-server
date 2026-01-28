@@ -31,12 +31,6 @@ module.exports = {
   forceExit: true,
   ci: process.env.CI === 'true',
   reporters: process.env.CI 
-    ? [
-        'default',
-        ['jest-junit', {
-          outputDirectory: 'test-results',
-          outputName: 'junit.xml',
-        }]
-      ]
+    ? ['default']
     : ['default']
 };

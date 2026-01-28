@@ -25,7 +25,8 @@
     "type-check": "npx tsc --noEmit",
     "validate:i18n": "node scripts/validate-i18n.js",
     "health-check": "node scripts/health-check.js",
-    "ci:full": "npm run validate:i18n && npm run type-check && npm run test:ci && npm run build"
+    "ci:full": "npm run validate:i18n && npm run type-check && npm run test:ci && npm run build",
+    "ci:test-local": "node scripts/test-ci-local.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
