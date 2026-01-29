@@ -19,8 +19,10 @@ describe("i18n Service", () => {
     });
 
     it("deve substituir parâmetros", () => {
-      const result = translate("en", "permissions.insufficient_permissions", { permission: "user:create" });
-      expect(result).toContain("user:create");
+      const simpleResult = translate("en", "email.welcome.greeting");
+      expect(simpleResult).not.toBe("email.welcome.greeting");
+      const result = translate("en", "email.welcome.greeting", { name: "John" });
+      expect(result).toContain("John");
     });
 
     it("deve funcionar com todos os idiomas suportados", () => {

@@ -43,9 +43,6 @@
     "requires_permission": "This route requires permission: {types}",
     "requires_authentication": "This route requires authentication"
   },
-  "permissions": {
-    "insufficient_permissions": "You don't have permission to perform this action. Required: {permission}"
-  },
   "auth": {
     "password_reset": {
       "email_sent": "If the provided email exists in our system, you will receive a link to reset your password.",
@@ -78,6 +75,7 @@
     }
   },
   "permissions": {
+    "insufficient_permissions": "You don't have permission to perform this action. Required: {permission}",
     "user:create": {
       "name": "Create Users",
       "description": "Permission to create new users in the system"

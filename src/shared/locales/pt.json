@@ -43,9 +43,6 @@
     "requires_permission": "Esta rota requer permissão de: {types}",
     "requires_authentication": "Esta rota requer autenticação"
   },
-  "permissions": {
-    "insufficient_permissions": "Você não tem permissão para realizar esta ação. Necessário: {permission}"
-  },
   "auth": {
     "password_reset": {
       "email_sent": "Se o email fornecido existir em nosso sistema, você receberá um link para redefinir sua senha.",
@@ -78,6 +75,7 @@
     }
   },
   "permissions": {
+    "insufficient_permissions": "Você não tem permissão para realizar esta ação. Necessário: {permission}",
     "user:create": {
       "name": "Criar Usuários",
       "description": "Permissão para criar novos usuários no sistema"

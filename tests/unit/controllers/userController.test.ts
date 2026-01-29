@@ -19,6 +19,7 @@ describe("UserController", () => {
     mockReq = {
       body: {},
       params: {},
+      query: {},
       userId: 1,
       language: "en",
     };
@@ -31,7 +32,7 @@ describe("UserController", () => {
   });
 
   describe("getAllUsers", () => {
-    it("deve retornar lista de usuários", async () => {
+    it("deve retornar lista de usuários sem paginação", async () => {
       const mockUsers = [
         {
           id: 1,
@@ -450,8 +451,8 @@ describe("UserController", () => {
   describe("getAllPermissions", () => {
     it("deve retornar lista de permissões", async () => {
       const mockPermissions = [
-        { id: 1, code: "user:create", name: "Create User" },
-        { id: 2, code: "user:read", name: "Read User" },
+        { id: 1, code: "user:create", name: "Create User", description: "Permission to create users" },
+        { id: 2, code: "user:read", name: "Read User", description: "Permission to read users" },
       ];
 
       (permissionRepository.findAll as jest.Mock).mockReturnValue(mockPermissions);
@@ -459,7 +460,10 @@ describe("UserController", () => {
       await userController.getAllPermissions(mockReq as AuthenticatedRequest, mockRes, mockNext);
 
       expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith(mockPermissions);
+      expect(mockRes.json).toHaveBeenCalledWith([
+        { id: 1, code: "user:create", name: "Create Users", description: "Permission to create new users in the system" },
+        { id: 2, code: "user:read", name: "Read Users", description: "Permission to view user details" },
+      ]);
     });
 
     it("deve retornar lista vazia quando não há permissões", async () => {
