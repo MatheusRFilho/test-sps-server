@@ -5,7 +5,7 @@ import { JWT_SECRET } from "../shared/middleware/auth";
 import { AuthenticatedRequest, LoginRequest, JWTPayload } from "../shared/types";
 import { translate, DEFAULT_LANGUAGE } from "../shared/services/i18n";
 import { getUserPermissions } from "../permissions/service";
-import { comparePasswordSync, hashPasswordSync } from "../shared/utils/password";
+import { comparePasswordSync } from "../shared/utils/password";
 import { userRepository } from "../users/repository";
 import { sendPasswordResetEmail } from "../shared/services/email";
 
@@ -120,8 +120,7 @@ const authController = {
         return;
       }
 
-      const hashedPassword = hashPasswordSync(password);
-      userRepository.update(user.id, { password: hashedPassword });
+      userRepository.update(user.id, { password: password });
       userRepository.clearResetToken(user.id);
 
       res.status(200).json({

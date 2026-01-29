@@ -36,7 +36,8 @@
     "user_created": "Usuario creado con éxito",
     "user_updated": "Usuario actualizado con éxito",
     "user_deleted": "Usuario eliminado con éxito",
-    "login_success": "Inicio de sesión exitoso"
+    "login_success": "Inicio de sesión exitoso",
+    "preferences_updated": "Preferencias del usuario actualizadas con éxito"
   },
   "guards": {
     "requires_permission": "Esta ruta requiere permiso de: {types}",
@@ -74,6 +75,50 @@
       "expires": "Este enlace expira en 1 hora.",
       "warning": "Si no solicitó este restablecimiento, ignore este correo electrónico.",
       "signature": "Saludos cordiales,\nEquipo SPS Group"
+    }
+  },
+  "permissions": {
+    "user:create": {
+      "name": "Crear Usuarios",
+      "description": "Permiso para crear nuevos usuarios en el sistema"
+    },
+    "user:read": {
+      "name": "Ver Usuarios",
+      "description": "Permiso para ver detalles de los usuarios"
+    },
+    "user:update": {
+      "name": "Actualizar Usuarios",
+      "description": "Permiso para modificar información de los usuarios"
+    },
+    "user:delete": {
+      "name": "Eliminar Usuarios",
+      "description": "Permiso para eliminar usuarios del sistema"
+    },
+    "user:list": {
+      "name": "Listar Usuarios",
+      "description": "Permiso para ver la lista de todos los usuarios"
+    },
+    "email:block_duplicate": {
+      "name": "Bloquear Emails Duplicados",
+      "description": "Permiso para prevenir registros de emails duplicados"
+    },
+    "admin:access": {
+      "name": "Acceso Administrativo",
+      "description": "Acceso administrativo completo al sistema"
+    }
+  },
+  "roles": {
+    "admin": {
+      "name": "Administrador",
+      "description": "Administrador del sistema con todos los permisos"
+    },
+    "manager": {
+      "name": "Gerente",
+      "description": "Gerente con permisos de gestión de usuarios"
+    },
+    "user": {
+      "name": "Usuario",
+      "description": "Usuario común con permisos básicos"
     }
   }
 }

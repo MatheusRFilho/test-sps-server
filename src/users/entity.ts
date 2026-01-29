@@ -1,4 +1,4 @@
-import { SupportedLanguage } from "../shared/types";
+import { SupportedLanguage, SupportedTheme } from "../shared/types";
 
 export class User {
   constructor(
@@ -7,6 +7,7 @@ export class User {
     public email: string,
     public type: "admin" | "manager" | "user",
     public language: SupportedLanguage,
+    public theme: SupportedTheme,
     public password?: string,
     public resetToken?: string | null,
     public resetTokenExpires?: Date | null
@@ -19,6 +20,7 @@ export class User {
       row.email,
       row.type,
       row.language,
+      row.theme || 'light',
       row.password,
       row.reset_token || null,
       row.reset_token_expires ? new Date(row.reset_token_expires) : null
@@ -37,6 +39,7 @@ export interface CreateUserData {
   type?: "admin" | "manager" | "user";
   password: string;
   language?: SupportedLanguage;
+  theme?: SupportedTheme;
   permissions?: string[];
 }
 
@@ -46,5 +49,6 @@ export interface UpdateUserData {
   type?: "admin" | "manager" | "user";
   password?: string;
   language?: SupportedLanguage;
+  theme?: SupportedTheme;
   permissions?: string[];
 }

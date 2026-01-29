@@ -1,6 +1,7 @@
 import { Request } from "express";
 
 export type SupportedLanguage = "pt" | "en" | "es";
+export type SupportedTheme = "light" | "dark" | "system";
 
 export interface User {
   id: number;
@@ -8,6 +9,7 @@ export interface User {
   email: string;
   type: "admin" | "manager" | "user";
   language: SupportedLanguage;
+  theme: SupportedTheme;
   password?: string;
 }
 
@@ -22,6 +24,7 @@ export interface CreateUserRequest {
   type?: "admin" | "manager" | "user";
   password: string;
   language?: SupportedLanguage;
+  theme?: SupportedTheme;
   permissions?: string[];
 }
 
@@ -31,6 +34,7 @@ export interface UpdateUserRequest {
   type?: "admin" | "manager" | "user";
   password?: string;
   language?: SupportedLanguage;
+  theme?: SupportedTheme;
   permissions?: string[];
 }
 
@@ -43,6 +47,40 @@ export interface AuthenticatedRequest extends Request {
   t?: (key: string, params?: Record<string, string>) => string;
   user?: User;
   permissions?: string[];
+}
+
+export interface UserPreferencesRequest {
+  language?: SupportedLanguage;
+  theme?: SupportedTheme;
+}
+
+export interface PaginationQuery {
+  page?: string;
+  limit?: string;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  offset: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder: 'asc' | 'desc';
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 }
 
 export interface JWTPayload {

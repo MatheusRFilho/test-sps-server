@@ -84,4 +84,8 @@ export const permissionQueries = {
   getAllPermissions(): Statement {
     return db.prepare("SELECT id, code, name, description FROM permissions ORDER BY code");
   },
+
+  getAllRoles(): Statement {
+    return db.prepare("SELECT id, code, name, description FROM roles ORDER BY code");
+  },
 };

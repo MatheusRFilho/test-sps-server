@@ -3,6 +3,7 @@ import { userQueries } from "./queries";
 import { permissionQueries } from "../permissions/queries";
 import { hashPasswordSync } from "../shared/utils/password";
 import { assignRoleToUser, setUserPermissions } from "../permissions/service";
+import { PaginationParams } from "../shared/types";
 
 interface CountResult {
   count: number;
@@ -13,6 +14,36 @@ export class UserRepository {
     const stmt = userQueries.getAllUsers();
     const rows = stmt.all() as any[];
     return rows.map((row) => User.fromDatabase(row));
+  }
+
+  findPaginated(params: PaginationParams): { users: User[]; total: number } {
+    const { search, sortBy, sortOrder, limit, offset } = params;
+    
+    const searchPattern = search ? `%${search}%` : undefined;
+    
+    const stmt = userQueries.getUsersPaginated(search, sortBy, sortOrder);
+    let rows: any[];
+    
+    if (search) {
+      rows = stmt.all(searchPattern, searchPattern, limit, offset) as any[];
+    } else {
+      rows = stmt.all(limit, offset) as any[];
+    }
+    
+    const users = rows.map((row) => User.fromDatabase(row));
+    
+    const countStmt = userQueries.getUsersCount(search);
+    let totalResult: any;
+    
+    if (search) {
+      totalResult = countStmt.get(searchPattern, searchPattern) as any;
+    } else {
+      totalResult = countStmt.get() as any;
+    }
+    
+    const total = totalResult.count;
+    
+    return { users, total };
   }
 
   findById(id: number): User | null {
@@ -34,7 +65,7 @@ export class UserRepository {
   }
 
   create(data: CreateUserData): User {
-    const { email, name, type, password, language, permissions } = data;
+    const { email, name, type, password, language, theme, permissions } = data;
 
     if (this.emailExists(email)) {
       throw new Error("EMAIL_ALREADY_REGISTERED");
@@ -44,7 +75,7 @@ export class UserRepository {
 
     try {
       const stmt = userQueries.createUser();
-      const result = stmt.run(email, name, type || "user", hashedPassword, language || "en");
+      const result = stmt.run(email, name, type || "user", hashedPassword, language || "en", theme || "light");
 
       const userId = Number(result.lastInsertRowid);
 
@@ -76,7 +107,7 @@ export class UserRepository {
   }
 
   update(id: number, data: UpdateUserData): User {
-    const { email, name, type, password, language, permissions } = data;
+    const { email, name, type, password, language, theme, permissions } = data;
 
     const existingUser = this.findById(id);
     if (!existingUser) {
@@ -121,6 +152,10 @@ export class UserRepository {
     if (language !== undefined) {
       updates.push("language = ?");
       values.push(language);
+    }
+    if (theme !== undefined) {
+      updates.push("theme = ?");
+      values.push(theme);
     }
 
     if (updates.length === 0 && !permissions) {

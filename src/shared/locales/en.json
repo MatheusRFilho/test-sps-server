@@ -36,7 +36,8 @@
     "user_created": "User created successfully",
     "user_updated": "User updated successfully",
     "user_deleted": "User deleted successfully",
-    "login_success": "Login successful"
+    "login_success": "Login successful",
+    "preferences_updated": "User preferences updated successfully"
   },
   "guards": {
     "requires_permission": "This route requires permission: {types}",
@@ -74,6 +75,50 @@
       "expires": "This link expires in 1 hour.",
       "warning": "If you did not request this reset, please ignore this email.",
       "signature": "Best regards,\nSPS Group Team"
+    }
+  },
+  "permissions": {
+    "user:create": {
+      "name": "Create Users",
+      "description": "Permission to create new users in the system"
+    },
+    "user:read": {
+      "name": "Read Users",
+      "description": "Permission to view user details"
+    },
+    "user:update": {
+      "name": "Update Users",
+      "description": "Permission to modify user information"
+    },
+    "user:delete": {
+      "name": "Delete Users",
+      "description": "Permission to remove users from the system"
+    },
+    "user:list": {
+      "name": "List Users",
+      "description": "Permission to view the list of all users"
+    },
+    "email:block_duplicate": {
+      "name": "Block Duplicate Emails",
+      "description": "Permission to prevent duplicate email registrations"
+    },
+    "admin:access": {
+      "name": "Admin Access",
+      "description": "Full administrative access to the system"
+    }
+  },
+  "roles": {
+    "admin": {
+      "name": "Administrator",
+      "description": "Full system administrator with all permissions"
+    },
+    "manager": {
+      "name": "Manager",
+      "description": "Manager with user management permissions"
+    },
+    "user": {
+      "name": "User",
+      "description": "Regular user with basic permissions"
     }
   }
 }

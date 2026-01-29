@@ -1,4 +1,4 @@
-import { Permission } from "./entities";
+import { Permission, Role } from "./entities";
 import { permissionQueries } from "./queries";
 
 interface UserPermission {
@@ -10,6 +10,12 @@ export class PermissionRepository {
     const stmt = permissionQueries.getAllPermissions();
     const rows = stmt.all() as any[];
     return rows.map((row) => Permission.fromDatabase(row));
+  }
+
+  findAllRoles(): Role[] {
+    const stmt = permissionQueries.getAllRoles();
+    const rows = stmt.all() as any[];
+    return rows.map((row) => Role.fromDatabase(row));
   }
 
   getUserPermissions(userId: number): string[] {

@@ -66,6 +66,12 @@ const options: swaggerJsdoc.Options = {
               enum: ["pt", "en", "es"],
               description: "Idioma preferido do usuário",
               example: "en"
+            },
+            theme: {
+              type: "string",
+              enum: ["light", "dark", "system"],
+              description: "Tema preferido do usuário",
+              example: "light"
             }
           }
         },
@@ -130,6 +136,13 @@ const options: swaggerJsdoc.Options = {
               default: "en",
               example: "en"
             },
+            theme: {
+              type: "string",
+              enum: ["light", "dark", "system"],
+              description: "Tema preferido do usuário (light, dark, system)",
+              default: "light",
+              example: "light"
+            },
             permissions: {
               type: "array",
               items: {
@@ -169,6 +182,12 @@ const options: swaggerJsdoc.Options = {
               enum: ["pt", "en", "es"],
               description: "Idioma preferido do usuário (pt, en, es)",
               example: "en"
+            },
+            theme: {
+              type: "string",
+              enum: ["light", "dark", "system"],
+              description: "Tema preferido do usuário (light, dark, system)",
+              example: "light"
             },
             permissions: {
               type: "array",

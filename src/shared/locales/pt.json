@@ -36,7 +36,8 @@
     "user_created": "Usuário criado com sucesso",
     "user_updated": "Usuário atualizado com sucesso",
     "user_deleted": "Usuário deletado com sucesso",
-    "login_success": "Login realizado com sucesso"
+    "login_success": "Login realizado com sucesso",
+    "preferences_updated": "Preferências do usuário atualizadas com sucesso"
   },
   "guards": {
     "requires_permission": "Esta rota requer permissão de: {types}",
@@ -74,6 +75,50 @@
       "expires": "Este link expira em 1 hora.",
       "warning": "Se você não solicitou esta redefinição, ignore este email.",
       "signature": "Atenciosamente,\nEquipe SPS Group"
+    }
+  },
+  "permissions": {
+    "user:create": {
+      "name": "Criar Usuários",
+      "description": "Permissão para criar novos usuários no sistema"
+    },
+    "user:read": {
+      "name": "Visualizar Usuários",
+      "description": "Permissão para visualizar detalhes dos usuários"
+    },
+    "user:update": {
+      "name": "Atualizar Usuários",
+      "description": "Permissão para modificar informações dos usuários"
+    },
+    "user:delete": {
+      "name": "Deletar Usuários",
+      "description": "Permissão para remover usuários do sistema"
+    },
+    "user:list": {
+      "name": "Listar Usuários",
+      "description": "Permissão para visualizar a lista de todos os usuários"
+    },
+    "email:block_duplicate": {
+      "name": "Bloquear Emails Duplicados",
+      "description": "Permissão para prevenir registros de emails duplicados"
+    },
+    "admin:access": {
+      "name": "Acesso Administrativo",
+      "description": "Acesso administrativo completo ao sistema"
+    }
+  },
+  "roles": {
+    "admin": {
+      "name": "Administrador",
+      "description": "Administrador do sistema com todas as permissões"
+    },
+    "manager": {
+      "name": "Gerente",
+      "description": "Gerente com permissões de gerenciamento de usuários"
+    },
+    "user": {
+      "name": "Usuário",
+      "description": "Usuário comum com permissões básicas"
     }
   }
 }
